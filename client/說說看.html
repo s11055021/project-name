@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<link rel="icon" href="#" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台語學習系統</title>
+	<style>
+		body {
+			color: #2c3e50;
+			margin: 80px 10px;
+		}
+		video {
+			width: 40vw;
+			height: 30vw;
+			margin: 2rem;
+			background: #2c3e50;
+		}
+
+		.videos {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}      
+		#callInput {
+			border: 2px solid blue;
+			padding: 10px;
+			width: 300px; /* 調整輸入框寬度 */
+		}
+	</style>
+    <link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html"><img src="logo.png" alt="logo"></a>
+        <ul>
+			<li><a href="teacher.html" target="_self">我要當老師</a></li>
+			<li><a href="常見問答.html" target="_self">常見問答</a></li>
+            <li><a href="說說看.html" target="_self">換我說說看</a></li>
+            <li id ="user"><a>用戶相關</a>
+                <ul>
+                    <li class="logout"><a href="#" id="loginButton">登入</a></li>
+                    <li class="logout"><a href="#" id="signupButton">註冊</a></li>
+					<li class="login"><a href="學習紀錄.html" id="learningrecord">學習紀錄</a></li>
+                    <li class="login"><a href="#" id="logoutButton">登出</a></li>					
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- 新增的 Section 部分 -->
+    <section>
+		
+		<div class="videos">
+
+		  <span>
+			<h3>Local Stream</h3>
+			<video id="webcamVideo" autoplay playsinline></video>
+		  </span>
+
+		  <span>
+			<h3>Remote Stream</h3>
+			<video id="remoteVideo" autoplay playsinline></video>
+		  </span>
+		</div>
+
+		<button id="webcamButton">Start webcam</button>
+		<h2>Create a new Call</h2>
+		<button id="callButton" disabled>Create Call (offer)</button>
+
+		<h2>Join a Call</h2>
+		<p>Answer the call from a different browser window or device</p>
+		
+		<input id="callInput"><br>
+		<button id="answerButton" disabled>Answer</button>
+
+		<h2>Hangup</h2>
+
+		<button id="hangupButton" disabled>Hangup</button>
+    </section>
+
+    <div id ="modal-login" class="modal">
+        <form id="login">
+            <h2>登入</h2>
+            <div>
+                <label for="account">用戶名：</label>
+                <input type="text"  id="loginaccount" placeholder="Email" required>
+            </div>
+            <div>
+                <label for="password">密碼：</label>
+                <input type="password" id="loginpassword" placeholder="Password" required>
+            </div>
+            <button type="submit">登入</button>
+        </form>
+	</div>
+
+	<div id ="modal-signup" class="modal">
+        <form id="signup">
+            <h2>註冊</h2>
+            <div>
+                <label for="account">用戶名：</label>
+                <input type="text"  id="account" placeholder="Email" required>
+            </div>
+            <div>
+                <label for="password">密碼：</label>
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+            <button type="submit">註冊</button>
+        </form>
+	</div>
+    
+	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-firestore.js"></script>
+    <script src="scripts/firebase.js"></script>
+		
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="scripts/auth.js"></script>
+	<script src="scripts/logbox.js"></script>
+	<script type="module" src="scripts/main.js"></script>
+    
+    <!-- 新增的 Footer 部分 -->
+    <footer>
+        &copy; 2024 台語學習. All rights reserved.
+    </footer>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台語學習系統</title>
+    <style>
+        section {
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: space-around;
+            align-items: flex-start; 
+            padding: 20px;
+        }
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            margin-right: 20px;
+            height: 400px; 
+            z-index: 0;
+        }
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 2px solid #000;
+            box-sizing: border-box;
+        }
+	</style>
+
+    <link rel="stylesheet" href="css/chat.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/mobile.css">
+	
+</head>
+<body>
+    <nav>
+        <a href="index.html"><img src="logo.png" alt="logo"></a>
+        <ul>
+			<li><a href="teacher.html" target="_self">我要當老師</a></li>
+			<li><a href="常見問答.html" target="_self">常見問答</a></li>
+            <li><a href="說說看.html" target="_self">換我說說看</a></li>
+            <li id ="user"><a>用戶相關</a>
+                <ul>
+                    <li class="logout"><a href="#" id="loginButton">登入</a></li>
+                    <li class="logout"><a href="#" id="signupButton">註冊</a></li>
+					<li class="login"><a href="學習紀錄.html" id="learningrecord">學習紀錄</a></li>
+                    <li class="login"><a href="#" id="logoutButton">登出</a></li>					
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- 新增的 Section 部分 -->
+    <section>
+		
+        <div class="image-container">
+            <img src="101.png" alt="101">
+            <a href="101.html" class="button">開始上課</a>
+        </div>
+        <div class="image-container">
+            <img src="102.png" alt="102">
+            <a href="102.html" class="button">開始上課</a>
+        </div>
+        <div class="image-container">
+            <img src="103.png" alt="103">
+            <a href="103.html" class="button">開始上課</a>
+        </div>
+		
+    </section>
+
+    <div class="container" id="chatContainer">
+        <div class="sidebar">
+            <div class="contact" onclick="selectContact('Contact 1')">
+                <img src="https://via.placeholder.com/50" alt="Contact 1">
+                <div>Contact 1</div>
+            </div>
+            <div class="contact" onclick="selectContact('Contact 2')">
+                <img src="https://via.placeholder.com/50" alt="Contact 2">
+                <div>Contact 2</div>
+            </div>
+            <!-- More contacts can be added here -->
+        </div>
+        <div class="chat-box">
+            <div class="chat-header">
+                <span id="chatHeader">Chat</span>
+                <button onclick="toggleChat()" style="background:none;border:none;font-size:20px;cursor:pointer;">&times;</button>
+            </div>
+            <div class="chat-content" id="chatContent">
+                <!-- Messages will appear here -->
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="toggle-button" id="toggleButton" onclick="toggleChat()">Chat</button>
+    
+    <div id ="modal-login" class="modal">
+        <form id="login">
+            <h2>登入</h2>
+            <div>
+                <label for="account">用戶名：</label>
+                <input type="text"  id="loginaccount" placeholder="Email" required>
+            </div>
+            <div>
+                <label for="password">密碼：</label>
+                <input type="password" id="loginpassword" placeholder="Password" required>
+            </div>
+            <button type="submit">登入</button>
+        </form>
+	</div>
+
+	<div id ="modal-signup" class="modal">
+        <form id="signup">
+            <h2>註冊</h2>
+            <div>
+                <label for="account">用戶名：</label>
+                <input type="text"  id="account" placeholder="Email" required>
+            </div>
+            <div>
+                <label for="password">密碼：</label>
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+            <button type="submit">註冊</button>
+        </form>
+	</div>
+    
+    
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-auth.js"></script>
+
+	<!-- Add Firebase products that you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-firestore.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBw8X7vJ9HnyAs1QJSFCb-9IjvOqYZqkcw",
+            authDomain: "spaces-23336.firebaseapp.com",
+            projectId: "spaces-23336",
+            storageBucket: "spaces-23336.appspot.com",
+            messagingSenderId: "868299178198",
+            appId: "1:868299178198:web:524cd80fce114330850977",
+            measurementId: "G-D9M0VW8LF3"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+		
+		if (!firebase.apps.length) {
+			firebase.initializeApp(firebaseConfig);
+		} else {
+			firebase.app(); // 如果已經初始化，就使用現有的實例
+		}
+        
+    </script>
+		
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="scripts/auth.js"></script>
+	<script src="scripts/logbox.js"></script>
+    <script defer src="scripts/chat.js"></script>
+	
+    
+    <!-- 新增的 Footer 部分 -->
+    <footer>
+        &copy; 2024 台語學習. All rights reserved.
+    </footer>
+</body>
+</html>

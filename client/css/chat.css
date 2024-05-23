@@ -1,0 +1,116 @@
+
+.container {
+    width: 90%;
+    height: 80%;
+    max-width: 900px;
+    max-height: 800px;
+    border: 1px solid black; /* 新增黑色線條 */
+    box-sizing: border-box; /* 確保邊框包含在指定的寬度和高度內 */
+    background-color: #fff;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: none; /* 初始隱藏 */
+}
+.sidebar {
+    width: 30%;
+    background-color: #f1f1f1;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+}
+.sidebar .contact {
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.sidebar .contact img {
+    border-radius: 50%;
+    margin-right: 15px;
+}
+.chat-box {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+.chat-header {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: #f1f1f1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.chat-header span {
+    text-align: center; /* 置中顯示標題 */
+}
+.chat-content {
+    flex: 1;
+    padding: 5px;
+    overflow-y: auto;
+    background-color: #fff;
+}
+.message {
+    margin-bottom: 10px;
+    display: flex;
+    word-wrap: break-word; /* 確保內容太長時自動換行 */
+}
+.message.sent {
+    justify-content: flex-end;
+}
+.message.received {
+    justify-content: flex-start;
+}
+.message .bubble {
+    padding: 5px 10px;
+    border-radius: 15px;
+    max-width: 70%;
+    white-space: pre-wrap; /* 確保內容太長時自動換行 */
+}
+.message.sent .bubble {
+    background-color: #0084ff;
+    color: #fff;
+}
+.message.received .bubble {
+    background-color: #f1f1f1;
+}
+.chat-input {
+    padding: 5px;
+    border-top: 1px solid #ccc;
+    background-color: #f1f1f1;
+    display: flex;
+    align-items: center;
+}
+.chat-input input {
+    flex: 1;
+    padding: 10px; /* 調整內填充以確保高度一致 */
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    margin-right: 5px;
+    margin-top: 20px;
+    box-sizing: border-box;
+    height: 40px; /* 確保高度一致 */
+}
+.chat-input button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 15px;
+    background-color: #0084ff;
+    color: #fff;
+    cursor: pointer;
+    height: 40px; /* 確保高度一致 */
+}
+.toggle-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #0084ff;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}

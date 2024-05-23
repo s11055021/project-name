@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台語學習系統</title>
+    <style>
+        /* 新增的 Section 部分 */
+        section {
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: space-around;
+            align-items: flex-start; 
+            padding: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <script src="https://cdn.jsdelivr.net/npm/js-base64@3.6.1/base64.min.js"></script>
+</head>
+<body>
+    <nav>
+        <a href="index.html"><img src="logo.png" alt="logo"></a>
+        <ul>
+			<li><a href="teacher.html" target="_self">我要當老師</a></li>
+			<li><a href="常見問答.html" target="_self">常見問答</a></li>
+            <li><a href="說說看.html" target="_self">換我說說看</a></li>
+            <li id ="user"><a>用戶相關</a>
+                <ul>
+                    <li class="logout"><a href="#" id="loginButton">登入</a></li>
+                    <li class="logout"><a href="#" id="signupButton">註冊</a></li>
+					<li class="login"><a href="學習紀錄.html" id="learningrecord">學習紀錄</a></li>
+                    <li class="login"><a href="#" id="logoutButton">登出</a></li>					
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- 新增的 Section 部分 -->
+    <section>
+        <form id="teacherForm">
+            <div>
+                <label for="profileImage">上傳圖片：</label>
+                <input type="file" id="profileImage" accept="image/*">
+            </div>
+            <div>
+                <label for="bio">關於我：</label>
+                <textarea id="bio" rows="4" cols="50" placeholder="寫一些關於我自己的介紹"></textarea>
+            </div>
+            <div>
+                <label for="availableDates">方便上課的日期和時間：</label>
+                <div>
+                    <label><input type="checkbox" name="availableDates" value="Monday Morning"> 星期一早</label>
+                    <label><input type="checkbox" name="availableDates" value="Monday Afternoon"> 星期一中</label>
+                    <label><input type="checkbox" name="availableDates" value="Monday Evening"> 星期一晚</label>
+                    <!-- Add more checkboxes for other days and times -->
+                </div>
+            </div>
+            <button type="button" onclick="uploadTeacherInfo()">提交</button>
+        </form>
+    </section>
+
+    <div class="container" id="chatContainer">
+        <div class="sidebar">
+            <div class="contact" onclick="selectContact('Contact 1')">
+                <img src="https://via.placeholder.com/50" alt="Contact 1">
+                <div>Contact 1</div>
+            </div>
+            <div class="contact" onclick="selectContact('Contact 2')">
+                <img src="https://via.placeholder.com/50" alt="Contact 2">
+                <div>Contact 2</div>
+            </div>
+            <!-- More contacts can be added here -->
+        </div>
+        <div class="chat-box">
+            <div class="chat-header">
+                <span id="chatHeader">Chat</span>
+                <button onclick="toggleChat()" style="background:none;border:none;font-size:20px;cursor:pointer;">&times;</button>
+            </div>
+            <div class="chat-content" id="chatContent">
+                <!-- Messages will appear here -->
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="toggle-button" id="toggleButton" onclick="toggleChat()">Chat</button>
+
+    <div id="modal-login" class="modal">
+        <form id="login">
+            <h2>登入</h2>
+            <div>
+                <label for="account">用戶名：</label>
+                <input type="text"  id="loginaccount" placeholder="Email" required>
+            </div>
+            <div>
+                <label for="password">密碼：</label>
+                <input type="password" id="loginpassword" placeholder="Password" required>
+            </div>
+            <button type="submit">登入</button>
+        </form>
+	</div>
+
+	<div id="modal-signup" class="modal">
+        <form id="signup">
+            <h2>註冊</h2>
+            <div>
+                <label for="account">用戶名：</label>
+                <input type="text"  id="account" placeholder="Email" required>
+            </div>
+            <div>
+                <label for="password">密碼：</label>
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+            <button type="submit">註冊</button>
+        </form>
+	</div>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-storage.js"></script>
+    <script src="scripts/firebase.js"></script>
+		
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="scripts/auth.js"></script>
+	<script src="scripts/logbox.js"></script>
+	<script defer src="scripts/chat.js"></script>
+    
+    <script>
+    async function uploadTeacherInfo() {
+        const profileImage = document.getElementById('profileImage').files[0];
+        const bio = document.getElementById('bio').value;
+        const availableDates = Array.from(document.querySelectorAll('input[name="availableDates"]:checked')).map(input => input.value);
+
+        if (profileImage) {
+            const storageRef = firebase.storage().ref();
+            const profileImageRef = storageRef.child(`images/${profileImage.name}`);
+            await profileImageRef.put(profileImage);
+            const imageUrl = await profileImageRef.getDownloadURL();
+
+            const docRef = await db.collection('teachers').add({
+                bio: bio,
+                availableDates: availableDates,
+                profileImageUrl: imageUrl
+            });
+
+            alert('上传成功！');
+            const teacherPageContent = generateTeacherPageContent(docRef.id, bio, availableDates, imageUrl);
+            await uploadToGitHub(`teacher_${docRef.id}.html`, teacherPageContent);
+        } else {
+            alert('请上传图片');
+        }
+    }
+
+    function generateTeacherPageContent(id, bio, availableDates, imageUrl) {
+        return `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Teacher Profile</title>
+        </head>
+        <body>
+            <h1>Teacher Profile</h1>
+            <img src="${imageUrl}" alt="Profile Image">
+            <p>${bio}</p>
+            <h2>Available Dates</h2>
+            <ul>
+                ${availableDates.map(date => `<li>${date}</li>`).join('')}
+            </ul>
+        </body>
+        </html>`;
+    }
+
+    async function uploadToGitHub(filename, content) {
+        const response = await fetch('http://your-server-endpoint/api/create-html', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ filename, content }),
+        });
+
+        if (response.ok) {
+            alert('HTML file created successfully on GitHub!');
+        } else {
+            alert('Failed to create HTML file on GitHub.');
+        }
+    }
+    </script>
+
+    <!-- 新增的 Footer 部分 -->
+    <footer>
+        &copy; 2024 台語學習. All rights reserved.
+    </footer>
+</body>
+</html>
