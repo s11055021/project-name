@@ -12,7 +12,7 @@ app.post('/api/create-html', async (req, res) => {
 
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
     const REPO_OWNER = 's11055021';
-    const REPO_NAME = 's11055021.githib.io';
+    const REPO_NAME = 'project-name';
     const FILE_PATH = ``;
     const COMMIT_MESSAGE = 'Create new HTML file';
 
