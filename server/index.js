@@ -1,9 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Enable CORS for all routes
+app.use(cors());
 
 app.use(bodyParser.json());
 
@@ -13,7 +17,7 @@ app.post('/api/create-html', async (req, res) => {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
     const REPO_OWNER = 's11055021';
     const REPO_NAME = 'project-name';
-    const FILE_PATH = ``;
+    const FILE_PATH = `project-name/client`;
     const COMMIT_MESSAGE = 'Create new HTML file';
 
     try {
