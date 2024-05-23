@@ -17,7 +17,7 @@ app.post('/api/create-html', async (req, res) => {
     const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
     const REPO_OWNER = 's11055021';
     const REPO_NAME = 'project-name';
-    const FILE_PATH = `project-name/client`;
+    const FILE_PATH = `client/${filename}`;
     const COMMIT_MESSAGE = 'Create new HTML file';
 
     try {
