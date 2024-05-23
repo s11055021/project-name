@@ -132,67 +132,68 @@
     <script defer src="scripts/chat.js"></script>
     
     <script>
-    async function uploadTeacherInfo() {
-        const profileImage = document.getElementById('profileImage').files[0];
-        const bio = document.getElementById('bio').value;
-        const availableDates = Array.from(document.querySelectorAll('input[name="availableDates"]:checked')).map(input => input.value);
+        async function uploadTeacherInfo() {
+            const profileImage = document.getElementById('profileImage').files[0];
+            const bio = document.getElementById('bio').value;
+            const availableDates = Array.from(document.querySelectorAll('input[name="availableDates"]:checked')).map(input => input.value);
+        
+            if (profileImage) {
+                const storageRef = firebase.storage().ref();
+                const profileImageRef = storageRef.child(`images/${profileImage.name}`);
+                await profileImageRef.put(profileImage);
+                const imageUrl = await profileImageRef.getDownloadURL();
+        
+                const docRef = await db.collection('teachers').add({
+                    bio: bio,
+                    availableDates: availableDates,
+                    profileImageUrl: imageUrl
+                });
+        
+                alert('上傳成功！');
+                const teacherPageContent = generateTeacherPageContent(docRef.id, bio, availableDates, imageUrl);
+                await uploadToGitHub(`teacher_${docRef.id}.html`, teacherPageContent);
+            } else {
+                alert('請上傳圖片');
+            }
+        }
 
-        if (profileImage) {
-            const storageRef = firebase.storage().ref();
-            const profileImageRef = storageRef.child(`images/${profileImage.name}`);
-            await profileImageRef.put(profileImage);
-            const imageUrl = await profileImageRef.getDownloadURL();
-
-            const docRef = await db.collection('teachers').add({
-                bio: bio,
-                availableDates: availableDates,
-                profileImageUrl: imageUrl
+        function generateTeacherPageContent(id, bio, availableDates, imageUrl) {
+            return `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Teacher Profile</title>
+            </head>
+            <body>
+                <h1>Teacher Profile</h1>
+                <img src="${imageUrl}" alt="Profile Image">
+                <p>${bio}</p>
+                <h2>Available Dates</h2>
+                <ul>
+                    ${availableDates.map(date => `<li>${date}</li>`).join('')}
+                </ul>
+            </body>
+            </html>`;
+        }
+        
+        async function uploadToGitHub(filename, content) {
+            const response = await fetch('https://project-name-kixz.onrender.com/api/create-html', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ filename, content }),
             });
-
-            alert('上傳成功！');
-            const teacherPageContent = generateTeacherPageContent(docRef.id, bio, availableDates, imageUrl);
-            await uploadToGitHub(`teacher_${docRef.id}.html`, teacherPageContent);
-        } else {
-            alert('請上傳圖片!');
+        
+            if (response.ok) {
+                alert('HTML file created successfully on GitHub!');
+            } else {
+                alert('Failed to create HTML file on GitHub.');
+            }
         }
-    }
-
-    function generateTeacherPageContent(id, bio, availableDates, imageUrl) {
-        return `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Teacher Profile</title>
-        </head>
-        <body>
-            <h1>Teacher Profile</h1>
-            <img src="${imageUrl}" alt="Profile Image">
-            <p>${bio}</p>
-            <h2>Available Dates</h2>
-            <ul>
-                ${availableDates.map(date => `<li>${date}</li>`).join('')}
-            </ul>
-        </body>
-        </html>`;
-    }
-
-    async function uploadToGitHub(filename, content) {
-        const response = await fetch('https://project-o4cw.onrender.com', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ filename, content }),
-        });
-
-        if (response.ok) {
-            alert('HTML file created successfully on GitHub!');
-        } else {
-            alert('Failed to create HTML file on GitHub.');
-        }
-    }
+        
     </script>
 
     <!-- 新增的 Footer 部分 -->
