@@ -150,7 +150,6 @@
 	        });
 	
 	        alert('上传成功！');
-	        const teacherPageContent = generateTeacherPageContent(docRef.id, bio, availableDates, imageUrl);
 	        await uploadToGitHub(`teacher_${docRef.id}.html`, teacherPageContent);
 	    } else {
 	        alert('请上传图片');
