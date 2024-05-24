@@ -72,9 +72,9 @@ nav ul ul li {
 		height: 100%; 
 	}
 	.button {
-		bottom: 10px; /* 在小屏幕上设置固定的像素值以适应较小的视觉空间 */
+		bottom: 10px;
 		right: 10px;
-		padding: 5px 10px; /* 调整按钮内边距 */
+		padding: 5px 10px;
 	}
 }
 
