@@ -28,16 +28,6 @@
             border: 2px solid #000;
             box-sizing: border-box;
         }
-        .button {
-            display: block;
-            width: 100px;
-            padding: 10px;
-            text-align: center;
-            background-color: #000;
-            color: #fff;
-            text-decoration: none;
-            margin-top: 10px;
-        }
 	</style>
 
     <link rel="stylesheet" href="css/chat.css">
@@ -64,11 +54,13 @@
     </nav>
 
     <!-- 新增的 Section 部分 -->
-    <section id="mainSection">
+    <section>
+	
         <div class="image-container">
             <img src="103.png" alt="103">
             <a href="103.html" class="button">開始上課</a>
         </div>
+		
     </section>
 
     <div class="container" id="chatContainer">
@@ -130,25 +122,7 @@
         </form>
 	</div>
     
-    <script>
-        // 處理從 teacher.html 發送過來的消息
-        window.addEventListener('message', function(event) {
-            if (event.data && event.data.imageURL && event.data.newPageUrl) {
-                updateMainPage(event.data.imageURL, event.data.newPageUrl);
-            }
-        });
-
-        function updateMainPage(imageURL, newPageUrl) {
-            var section = document.getElementById('mainSection');
-            var newImageContainer = document.createElement('div');
-            newImageContainer.className = 'image-container';
-            newImageContainer.innerHTML = `
-                <img src="${imageURL}" alt="Uploaded Image">
-                <a href="${newPageUrl}" class="button">查看資料</a>
-            `;
-            section.appendChild(newImageContainer);
-        }
-    </script>
+    
     <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
 	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-auth.js"></script>
