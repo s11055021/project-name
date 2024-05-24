@@ -2,36 +2,35 @@ async function uploadTeacherInfo() {
     const profileImage = document.getElementById('profileImage').files[0];
     const name = document.getElementById('name').value;
     const bio = document.getElementById('bio').value;
-    
-	const dayMap = {
-		'Monday': '週一',
-		'Tuesday': '週二',
-		'Wednesday': '週三',
-		'Thursday': '週四',
-		'Friday': '週五',
-		'Saturday': '週六',
-		'Sunday': '週日'
-	};
 
-	const timeSlotMap = {
-		'Morning': '上午',
-		'Afternoon': '下午',
-		'Evening': '傍晚'
-	};
+    const dayMap = {
+        'Monday': '週一',
+        'Tuesday': '週二',
+        'Wednesday': '週三',
+        'Thursday': '週四',
+        'Friday': '週五',
+        'Saturday': '週六',
+        'Sunday': '週日'
+    };
 
-	const availableDates = Array.from(document.querySelectorAll('input[name="availableDates"]:checked')).reduce((acc, input) => {
-		const [day, time] = input.value.split(' '); // 将值拆分为星期几和时间段
-		const chineseDay = dayMap[day];
-		const chineseTime = timeSlotMap[time];
-		if (!acc[chineseDay]) {
-			acc[chineseDay] = [chineseTime]; // 如果该天还没有添加到对象中，创建一个数组并添加时间段
-		} else {
-			acc[chineseDay].push(chineseTime); // 否则将时间段添加到已有的数组中
-		}
-		return acc;
-	}, {});
+    const timeSlotMap = {
+        'Morning': '上午',
+        'Afternoon': '下午',
+        'Evening': '傍晚'
+    };
 
-	
+    const availableDates = Array.from(document.querySelectorAll('input[name="availableDates"]:checked')).reduce((acc, input) => {
+        const [day, time] = input.value.split(' ');
+        const chineseDay = dayMap[day];
+        const chineseTime = timeSlotMap[time];
+        if (!acc[chineseDay]) {
+            acc[chineseDay] = [chineseTime];
+        } else {
+            acc[chineseDay].push(chineseTime);
+        }
+        return acc;
+    }, {});
+
     if (profileImage) {
         const storageRef = firebase.storage().ref();
         const profileImageRef = storageRef.child(`images/${profileImage.name}`);
@@ -46,17 +45,24 @@ async function uploadTeacherInfo() {
         });
 
         alert('上傳成功！');
-        const teacherPageContent = generateTeacherPageContent(docRef.id, bio, availableDates, imageUrl);
+        const teacherPageContent = generateTeacherPageContent(name, bio, availableDates, imageUrl);
         await uploadToGitHub(`teacher_${docRef.id}.html`, teacherPageContent);
     } else {
         alert('請上傳圖片');
     }
 }
 
-function generateTeacherPageContent(bio, availableDates, imageUrl) {
-    // Helper function to check if a time slot is available
+function generateTeacherPageContent(name, bio, availableDates, imageUrl) {
     function isAvailable(day, timeSlot) {
         return availableDates[day] && availableDates[day].includes(timeSlot);
+    }
+
+    function generateCells(timeSlot) {
+        const days = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+        return days.map(day => {
+            const available = isAvailable(day, timeSlot) ? 'available' : '';
+            return `<div class="cell ${available}"></div>`;
+        }).join('');
     }
 
     return `
@@ -120,7 +126,7 @@ function generateTeacherPageContent(bio, availableDates, imageUrl) {
             <img src="${imageUrl}" alt="Image Description" style="max-width: 100%; height: auto;">
         </div>
         <div class="description-section" style="flex: 2; padding: 20px;">
-            <h2>Name</h2>
+            <h2>${name}</h2>
             <p><strong>Description:</strong> ${bio}</p>
             <p><strong>Available Dates:</strong></p>
             <div class="availability-grid">
@@ -216,7 +222,9 @@ function generateTeacherPageContent(bio, availableDates, imageUrl) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="scripts/auth.js"></script>
     <script src="scripts/logbox.js"></script>
-    <script defer src="scripts/chat.js"></script>
+    <script src="scripts/chat.js"></script>
+
+    <script src="scripts/upload.js"></script> 
 
     <footer>
         &copy; 2024 台語學習. All rights reserved.
@@ -224,17 +232,9 @@ function generateTeacherPageContent(bio, availableDates, imageUrl) {
 </body>
 </html>
 `;
-
-    function generateCells(timeSlot) {
-        const days = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
-        return days.map(day => {
-            const available = isAvailable(day, timeSlot) ? 'available' : '';
-            return `<div class="cell ${available}"></div>`;
-        }).join('');
-    }
 }
 
-
+// Example uploadToGitHub function
 async function uploadToGitHub(filename, content) {
     const response = await fetch('https://project-name-kixz.onrender.com/api/create-html', {
         method: 'POST',
