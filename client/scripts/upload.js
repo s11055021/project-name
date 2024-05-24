@@ -1,6 +1,7 @@
 async function uploadTeacherInfo() {
     const profileImage = document.getElementById('profileImage').files[0];
     const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
     const bio = document.getElementById('bio').value;
 
     const dayMap = {
@@ -39,20 +40,21 @@ async function uploadTeacherInfo() {
 
         const docRef = await db.collection('teachers').add({
             name: name,
+            email: email,
             bio: bio,
             availableDates: availableDates,
             profileImageUrl: imageUrl
         });
 
         alert('上傳成功！');
-        const teacherPageContent = generateTeacherPageContent(name, bio, availableDates, imageUrl);
+        const teacherPageContent = generateTeacherPageContent(name, bio, availableDates, imageUrl, email);
         await uploadToGitHub(`teacher_${docRef.id}.html`, teacherPageContent);
     } else {
         alert('請上傳圖片');
     }
 }
 
-function generateTeacherPageContent(name, bio, availableDates, imageUrl) {
+function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) {
     function isAvailable(day, timeSlot) {
         return availableDates[day] && availableDates[day].includes(timeSlot);
     }
@@ -127,6 +129,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl) {
         </div>
         <div class="description-section" style="flex: 2; padding: 20px;">
             <h2>${name}</h2>
+            <h2><strong>聯絡信箱:</strong> ${email}</h2>
             <p><strong>關於我:</strong> ${bio}</p>
             <p><strong>方便上課的時間:</strong></p>
             <div class="availability-grid">
