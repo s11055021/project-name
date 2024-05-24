@@ -139,23 +139,34 @@
         
             if (profileImage) {
                 const storageRef = firebase.storage().ref();
+                
+                // 上传图片
                 const profileImageRef = storageRef.child(`images/${profileImage.name}`);
                 await profileImageRef.put(profileImage);
                 const imageUrl = await profileImageRef.getDownloadURL();
+                
+                // 生成教师页面内容
+                const teacherPageContent = generateTeacherPageContent(bio, availableDates, imageUrl);
+                
+                // 上传教师页面
+                const teacherPageRef = storageRef.child(`teacherPages/teacher_${Date.now()}.html`);
+                await teacherPageRef.putString(teacherPageContent, 'raw', { contentType: 'text/html' });
+                const teacherPageUrl = await teacherPageRef.getDownloadURL();
         
+                // 上传教师信息到 Firestore
                 const docRef = await db.collection('teachers').add({
                     bio: bio,
                     availableDates: availableDates,
-                    profileImageUrl: imageUrl
+                    profileImageUrl: imageUrl,
+                    teacherPageUrl: teacherPageUrl // 新增的 URL 字段
                 });
         
                 alert('上傳成功！');
-                const teacherPageContent = generateTeacherPageContent(docRef.id, bio, availableDates, imageUrl);
-                await uploadToGitHub(`teacher_${docRef.id}.html`, teacherPageContent);
             } else {
                 alert('請上傳圖片');
             }
         }
+        
 
         function generateTeacherPageContent(id, bio, availableDates, imageUrl) {
             return `
