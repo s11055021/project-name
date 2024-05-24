@@ -68,7 +68,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
     }
 
     function generateCells(timeSlot) {
-        const days = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+        const days = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
         return days.map(day => {
             const available = isAvailable(day, timeSlot) ? 'available' : '';
             return `<div class="cell ${available}"></div>`;
@@ -150,17 +150,15 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
                 <div class="day">週五</div>
                 <div class="day">週六</div>
                 
-                <div class="time-slot">上午<br>06:00-12:00</div>
-                ${generateCells('上午')}
+                <div class="time-slot">早上<br>09:00~12:00</div>
+                ${generateCells('早上')}
                 
-                <div class="time-slot">下午<br>12:00-18:00</div>
+                <div class="time-slot">下午<br>14:00-17:00</div>
                 ${generateCells('下午')}
                 
-                <div class="time-slot">傍晚<br>18:00-24:00</div>
-                ${generateCells('傍晚')}
+                <div class="time-slot">晚上<br>19:00-22:00</div>
+                ${generateCells('晚上')}
                 
-                <div class="time-slot">深夜<br>00:00-06:00</div>
-                ${generateCells('深夜')}
             </div>
         </div>
     </section>
