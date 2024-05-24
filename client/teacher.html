@@ -135,43 +135,29 @@
         async function uploadTeacherInfo() {
             const profileImage = document.getElementById('profileImage').files[0];
             const bio = document.getElementById('bio').value;
-            const availableDatesElements = document.querySelectorAll('input[name="availableDates"]:checked');
-            const availableDates = Array.from(availableDatesElements).map(input => input.value);
+            const availableDates = Array.from(document.querySelectorAll('input[name="availableDates"]:checked')).map(input => input.value);
         
             if (profileImage) {
                 const storageRef = firebase.storage().ref();
-                
-                // 上传图片
                 const profileImageRef = storageRef.child(`images/${profileImage.name}`);
                 await profileImageRef.put(profileImage);
                 const imageUrl = await profileImageRef.getDownloadURL();
-                
-                // 生成教师页面内容
-                const teacherPageContent = generateTeacherPageContent(bio, availableDates, imageUrl);
-                
-                // 上传教师页面
-                const teacherPageRef = storageRef.child(`teacherPages/teacher_${Date.now()}.html`);
-                await teacherPageRef.putString(teacherPageContent, 'raw', { contentType: 'text/html' });
-                const teacherPageUrl = await teacherPageRef.getDownloadURL();
         
-                // 上传教师信息到 Firestore
                 const docRef = await db.collection('teachers').add({
                     bio: bio,
                     availableDates: availableDates,
-                    profileImageUrl: imageUrl,
-                    teacherPageUrl: teacherPageUrl // 新增的 URL 字段
+                    profileImageUrl: imageUrl
                 });
         
                 alert('上傳成功！');
+                const teacherPageContent = generateTeacherPageContent(docRef.id, bio, availableDates, imageUrl);
+                await uploadToGitHub(`teacher_${docRef.id}.html`, teacherPageContent);
             } else {
                 alert('請上傳圖片');
             }
         }
-        
-        function generateTeacherPageContent(bio, availableDates, imageUrl) {
-            // 确保 availableDates 是数组
-            const availableDatesList = Array.isArray(availableDates) ? availableDates : [];
-        
+
+        function generateTeacherPageContent(id, bio, availableDates, imageUrl) {
             return `
             <!DOCTYPE html>
             <html lang="en">
@@ -186,12 +172,11 @@
                 <p>${bio}</p>
                 <h2>Available Dates</h2>
                 <ul>
-                    ${availableDatesList.map(date => `<li>${date}</li>`).join('')}
+                    ${availableDates.map(date => `<li>${date}</li>`).join('')}
                 </ul>
             </body>
             </html>`;
         }
-        
         
         async function uploadToGitHub(filename, content) {
             const response = await fetch('https://project-name-kixz.onrender.com/api/create-html', {
