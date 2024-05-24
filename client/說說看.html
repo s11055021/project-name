@@ -28,6 +28,7 @@
 			width: 300px; /* 調整輸入框寬度 */
 		}
 	</style>
+	<link rel="stylesheet" href="css/chat.css">
     <link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/mobile.css">
 </head>
@@ -80,6 +81,31 @@
 		<button id="hangupButton" disabled>Hangup</button>
     </section>
 
+	<div class="container" id="chatContainer">
+        <div class="sidebar">
+            <div class="contact" onclick="selectContact('Contact 1')">
+                <img src="https://via.placeholder.com/50" alt="Contact 1">
+                <div>Contact 1</div>
+            </div>
+            <!-- More contacts can be added here -->
+        </div>
+        <div class="chat-box">
+            <div class="chat-header">
+                <span id="chatHeader">Chat</span>
+                <button onclick="toggleChat()" style="background:none;border:none;font-size:20px;cursor:pointer;">&times;</button>
+            </div>
+            <div class="chat-content" id="chatContent">
+                <!-- Messages will appear here -->
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="toggle-button" id="toggleButton" onclick="toggleChat()">Chat</button>
+
     <div id ="modal-login" class="modal">
         <form id="login">
             <h2>登入</h2>
@@ -112,12 +138,14 @@
     
 	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-storage.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-firestore.js"></script>
     <script src="scripts/firebase.js"></script>
 		
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="scripts/auth.js"></script>
 	<script src="scripts/logbox.js"></script>
+    <script defer src="scripts/chat.js"></script>
 	<script type="module" src="scripts/main.js"></script>
     
     <!-- 新增的 Footer 部分 -->
