@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const testLink = document.querySelector('a[href="teacher.html"]');
     if (testLink) {
-        testLink2.addEventListener('click', function(event) {
+        testLink.addEventListener('click', function(event) {
             event.preventDefault();
             if (auth.currentUser) {
                 window.location.href = this.href; // 如果已登入，繼續導航
