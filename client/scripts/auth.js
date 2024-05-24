@@ -45,6 +45,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    const testLink = document.querySelector('a[href="teacher.html"]');
+    if (testLink) {
+        testLink2.addEventListener('click', function(event) {
+            event.preventDefault();
+            if (auth.currentUser) {
+                window.location.href = this.href; // 如果已登入，繼續導航
+            } else {
+                alert('請先登入，才能執行此操作'); // 顯示登入提示
+            }
+        });
+    }
+    
     const testLink2 = document.querySelector('a[href="說說看.html"]');
     if (testLink2) {
         testLink2.addEventListener('click', function(event) {
