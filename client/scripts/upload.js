@@ -49,8 +49,7 @@ async function uploadTeacherInfo() {
                 profileImageUrl: imageUrl
             });
 
-            alert('上傳成功！');
-            const teacherPageContent = generateTeacherPageContent(name, bio, availableDates, imageUrl);
+            const teacherPageContent = generateTeacherPageContent(name, bio, availableDates, imageUrl, email);
             await uploadToGitHub(`teacher_${docRef.id}.html`, teacherPageContent);
         } catch (error) {
             console.error("Error uploading teacher info:", error);
