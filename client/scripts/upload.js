@@ -142,13 +142,13 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
             <p><strong>方便上課的時間:</strong></p>
             <div class="availability-grid">
                 <div class="time-slot"></div>
-                <div class="day">週日</div>
                 <div class="day">週一</div>
                 <div class="day">週二</div>
                 <div class="day">週三</div>
                 <div class="day">週四</div>
                 <div class="day">週五</div>
                 <div class="day">週六</div>
+                <div class="day">週日</div>
                 
                 <div class="time-slot">早上<br>09:00~12:00</div>
                 ${generateCells('早上')}
