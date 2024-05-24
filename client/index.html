@@ -17,8 +17,8 @@
             overflow: hidden;
             margin-bottom: 20px;
             box-sizing: border-box;
-            margin-right: 20px;
-            height: 400px; 
+            width: 30%; 
+            height: 20%; 
             z-index: 0;
         }
         .image-container img {
@@ -27,6 +27,15 @@
             object-fit: cover;
             border: 2px solid #000;
             box-sizing: border-box;
+        }
+        .button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
         }
 	</style>
 
@@ -55,12 +64,7 @@
 
     <!-- 新增的 Section 部分 -->
     <section>
-	
-        <div class="image-container">
-            <img src="103.png" alt="103">
-            <a href="103.html" class="button">開始上課</a>
-        </div>
-		
+			
     </section>
 
     <div class="container" id="chatContainer">
@@ -126,8 +130,7 @@
     <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
 	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-app.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-auth.js"></script>
-
-	<!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-storage.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-firestore.js"></script>
     <script src="scripts/firebase.js"></script>
 		
@@ -135,11 +138,45 @@
     <script src="scripts/auth.js"></script>
 	<script src="scripts/logbox.js"></script>
     <script defer src="scripts/chat.js"></script>
-	
     
     <!-- 新增的 Footer 部分 -->
     <footer>
         &copy; 2024 台語學習. All rights reserved.
     </footer>
+
+    <!-- 新增的腳本部分 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+            const db = firebase.firestore();
+            const section = document.querySelector("section");
+
+            try {
+                const snapshot = await db.collection('teachers').get();
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const imageUrl = data.profileImageUrl;
+                    const teacherPageUrl = `teacher_${doc.id}.html`;
+
+                    const container = document.createElement('div');
+                    container.classList.add('image-container');
+
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    img.alt = `Teacher ${doc.id}`;
+
+                    const link = document.createElement('a');
+                    link.href = teacherPageUrl;
+                    link.classList.add('button');
+                    link.innerText = '查看資料';
+
+                    container.appendChild(img);
+                    container.appendChild(link);
+                    section.appendChild(container);
+                });
+            } catch (error) {
+                console.error("Error fetching teacher data: ", error);
+            }
+        });
+    </script>
 </body>
 </html>

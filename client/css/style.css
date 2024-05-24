@@ -66,14 +66,15 @@ nav ul ul li {
 }
 
 
-
 @media (max-width: 768px) {
 	.image-container {
-		height: 260px; /* 可以调整固定高度或保持高度自适应，视你的设计需求 */
+		width: 100%; 
+		height: 100%; 
 	}
 	.button {
 		bottom: 10px; /* 在小屏幕上设置固定的像素值以适应较小的视觉空间 */
 		right: 10px;
+		padding: 5px 10px; /* 调整按钮内边距 */
 	}
 }
 
