@@ -26,9 +26,43 @@ async function uploadTeacherInfo() {
 }
 
 function generateTeacherPageContent(bio, availableDates, imageUrl) {
+    // Helper function to convert availableDates to the required format
+    function transformAvailableDates(dates) {
+        const dayMap = {
+            'Monday': '週一',
+            'Tuesday': '週二',
+            'Wednesday': '週三',
+            'Thursday': '週四',
+            'Friday': '週五',
+            'Saturday': '週六',
+            'Sunday': '週日'
+        };
+        const timeSlotMap = {
+            'Morning': '上午',
+            'Afternoon': '下午',
+            'Evening': '傍晚'
+        };
+
+        const transformed = {};
+        dates.forEach(date => {
+            const [day, timeSlot] = date.split(' ');
+            const dayTranslated = dayMap[day];
+            const timeSlotTranslated = timeSlotMap[timeSlot];
+
+            if (!transformed[dayTranslated]) {
+                transformed[dayTranslated] = [];
+            }
+            transformed[dayTranslated].push(timeSlotTranslated);
+        });
+        return transformed;
+    }
+
+    // Transform availableDates
+    const transformedDates = transformAvailableDates(availableDates);
+
     // Helper function to check if a time slot is available
     function isAvailable(day, timeSlot) {
-        return availableDates[day] && availableDates[day].includes(timeSlot);
+        return transformedDates[day] && transformedDates[day].includes(timeSlot);
     }
 
     return `
@@ -182,12 +216,15 @@ function generateTeacherPageContent(bio, availableDates, imageUrl) {
     <script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.0/firebase-storage.js"></script>
     <script src="scripts/firebase.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="scripts/auth.js"></script>
     <script src="scripts/logbox.js"></script>
-    <script defer src="scripts/chat.js"></script>
+    <script src="scripts/chat.js"></script>
+
+    <script src="scripts/upload.js"></script> 
 
     <footer>
         &copy; 2024 台語學習. All rights reserved.
@@ -204,6 +241,7 @@ function generateTeacherPageContent(bio, availableDates, imageUrl) {
         }).join('');
     }
 }
+
 
 
 async function uploadToGitHub(filename, content) {
