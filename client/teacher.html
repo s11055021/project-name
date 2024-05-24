@@ -42,6 +42,34 @@
             box-sizing: border-box;
             font-size: 24px;
         }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 8px solid lightgray;
+            border-top: 8px solid blue;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
     <link rel="stylesheet" href="css/chat.css">
     <link rel="stylesheet" href="css/style.css">
@@ -99,7 +127,7 @@
                         <th>星期日</th>
                     </tr>
                     <tr>
-                        <td>早上(9:00~12:00)</td>
+                        <td>早上(09:00~12:00)</td>
                         <td><input type="checkbox" name="availableDates" value="Monday Morning"></td>
                         <td><input type="checkbox" name="availableDates" value="Tuesday Morning"></td>
                         <td><input type="checkbox" name="availableDates" value="Wednesday Morning"></td>
@@ -133,6 +161,11 @@
             <button type="button" onclick="uploadTeacherInfo()">提交</button>
         </form>
     </section>
+
+    <div id="loading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
 
     <div class="container" id="chatContainer">
         <div class="sidebar">
