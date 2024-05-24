@@ -33,22 +33,31 @@ async function uploadTeacherInfo() {
     }, {});
 
     if (profileImage) {
-        const storageRef = firebase.storage().ref();
-        const profileImageRef = storageRef.child(`images/${profileImage.name}`);
-        await profileImageRef.put(profileImage);
-        const imageUrl = await profileImageRef.getDownloadURL();
+        showLoading(true);
 
-        const docRef = await db.collection('teachers').add({
-            name: name,
-            email: email,
-            bio: bio,
-            availableDates: availableDates,
-            profileImageUrl: imageUrl
-        });
+        try {
+            const storageRef = firebase.storage().ref();
+            const profileImageRef = storageRef.child(`images/${profileImage.name}`);
+            await profileImageRef.put(profileImage);
+            const imageUrl = await profileImageRef.getDownloadURL();
 
-        alert('上傳成功！');
-        const teacherPageContent = generateTeacherPageContent(name, bio, availableDates, imageUrl, email);
-        await uploadToGitHub(`teacher_${docRef.id}.html`, teacherPageContent);
+            const docRef = await db.collection('teachers').add({
+                name: name,
+                email: email,
+                bio: bio,
+                availableDates: availableDates,
+                profileImageUrl: imageUrl
+            });
+
+            alert('上傳成功！');
+            const teacherPageContent = generateTeacherPageContent(name, bio, availableDates, imageUrl);
+            await uploadToGitHub(`teacher_${docRef.id}.html`, teacherPageContent);
+        } catch (error) {
+            console.error("Error uploading teacher info:", error);
+            alert('上傳失敗，請重試。');
+        } finally {
+            showLoading(false);
+        }
     } else {
         alert('請上傳圖片');
     }
@@ -235,17 +244,34 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
 
 // Example uploadToGitHub function
 async function uploadToGitHub(filename, content) {
-    const response = await fetch('https://project-name-kixz.onrender.com/api/create-html', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ filename, content }),
-    });
+    showLoading(true);
+    try {
+        const response = await fetch('https://project-name-kixz.onrender.com/api/create-html', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ filename, content }),
+        });
 
-    if (response.ok) {
-        alert('HTML file created successfully on GitHub!');
-    } else {
+        if (response.ok) {
+            alert('HTML file created successfully on GitHub!');
+        } else {
+            alert('Failed to create HTML file on GitHub.');
+        }
+    } catch (error) {
+        console.error("Error uploading to GitHub:", error);
         alert('Failed to create HTML file on GitHub.');
+    } finally {
+        showLoading(false);
+    }
+}
+
+function showLoading(isLoading) {
+    const loadingElement = document.getElementById('loading');
+    if (isLoading) {
+        loadingElement.style.display = 'flex';
+    } else {
+        loadingElement.style.display = 'none';
     }
 }
