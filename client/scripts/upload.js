@@ -15,9 +15,9 @@ async function uploadTeacherInfo() {
     };
 
     const timeSlotMap = {
-        'Morning': '上午',
+        'Morning': '早上',
         'Afternoon': '下午',
-        'Evening': '傍晚'
+        'Evening': '晚上'
     };
 
     const availableDates = Array.from(document.querySelectorAll('input[name="availableDates"]:checked')).reduce((acc, input) => {
