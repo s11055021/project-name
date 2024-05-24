@@ -127,8 +127,8 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl) {
         </div>
         <div class="description-section" style="flex: 2; padding: 20px;">
             <h2>${name}</h2>
-            <p><strong>Description:</strong> ${bio}</p>
-            <p><strong>Available Dates:</strong></p>
+            <p><strong>關於我:</strong> ${bio}</p>
+            <p><strong>方便上課的時間:</strong></p>
             <div class="availability-grid">
                 <div class="time-slot"></div>
                 <div class="day">週日</div>
@@ -160,11 +160,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl) {
                 <img src="https://via.placeholder.com/50" alt="Contact 1">
                 <div>Contact 1</div>
             </div>
-            <div class="contact" onclick="selectContact('Contact 2')">
-                <img src="https://via.placeholder.com/50" alt="Contact 2">
-                <div>Contact 2</div>
-            </div>
-            <!-- More contacts can be added here -->
+        <!-- More contacts can be added here -->
         </div>
         <div class="chat-box">
             <div class="chat-header">
