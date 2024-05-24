@@ -51,6 +51,9 @@ async function uploadTeacherInfo() {
 
             const teacherPageContent = generateTeacherPageContent(name, bio, availableDates, imageUrl, email);
             await uploadToGitHub(`teacher_${docRef.id}.html`, teacherPageContent);
+
+            // Reset the form after successful submission
+            document.getElementById('teacherForm').reset();
         } catch (error) {
             console.error("Error uploading teacher info:", error);
             alert('上傳失敗，請重試。');
