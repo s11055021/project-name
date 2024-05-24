@@ -193,6 +193,16 @@
                 alert('Failed to create HTML file on GitHub.');
             }
         }
+
+        function updateMainPage(imageURL, newPageUrl) {
+            // 發送信息給主頁以更新圖片和鏈接
+            if (window.opener && !window.opener.closed) {
+                window.opener.postMessage({ imageURL: imageURL, newPageUrl: newPageUrl }, '*');
+                window.close();
+            } else {
+                console.log('Unable to communicate with main page.');
+            }
+        }
         
     </script>
 
