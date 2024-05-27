@@ -255,7 +255,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
                         <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
                         <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
                     </div>
-                    <textarea id="feedback" placeholder="Write your feedback here..." required></textarea>
+                    <textarea id="feedback" placeholder="在這裡寫下你的回饋..." required></textarea>
                     <button id="feedbackbutton" type="submit">傳送</button>
                 </form>
                 <div id="feedback-list"></div>
