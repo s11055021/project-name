@@ -353,13 +353,13 @@ async function uploadToGitHub(filename, content) {
         });
 
         if (response.ok) {
-            alert('HTML file created successfully on GitHub!');
+            alert('上傳成功');
         } else {
-            alert('Failed to create HTML file on GitHub.');
+            alert('上傳失敗');
         }
     } catch (error) {
         console.error("Error uploading to GitHub:", error);
-        alert('Failed to create HTML file on GitHub.');
+        alert('上傳失敗');
     } finally {
         showLoading(false);
     }
