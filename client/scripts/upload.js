@@ -166,7 +166,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
             height: 100px; /* 固定 textarea 大小 */
         }
         button {
-            background-color: black;
+            background-color: #FFA500;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
@@ -174,7 +174,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
             transition: background-color 0.2s;
         }
         button:hover {
-            background-color: #00b0ff;
+            background-color: #cc8c1d;
         }
         #feedback-list {
             margin-top: 20px;
