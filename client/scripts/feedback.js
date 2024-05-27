@@ -33,7 +33,7 @@ function loadFeedback() {
             const feedbackData = doc.data();
             const timestamp = new Date(feedbackData.timestamp.seconds * 1000);
             const formattedTime = `${timestamp.toLocaleDateString()} ${timestamp.toLocaleTimeString()}`;
-            feedbackList.innerHTML += `<p><strong>${feedbackData.user}</strong>  <strong> ${feedbackData.rating} 顆星</strong>: ${feedbackData.feedback} - ${formattedTime}</p>`;
+            feedbackList.innerHTML += `<p><strong>${feedbackData.user}</strong><strong> (${feedbackData.rating}顆星)</strong>: ${feedbackData.feedback} - ${formattedTime}</p>`;
         });
     }).catch((error) => {
         console.error('Error loading feedback: ', error);
