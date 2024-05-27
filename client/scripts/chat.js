@@ -1,6 +1,8 @@
 let currentContact = '';
 
 function toggleChat() {
+    const chatContainer = document.getElementById('chatContainer');
+    const toggleButton = document.getElementById('toggleButton');
     if (chatContainer.style.display === 'none' || chatContainer.style.display === '') {
         chatContainer.style.display = 'flex';
         toggleButton.style.display = 'none';
@@ -11,9 +13,9 @@ function toggleChat() {
 }
 
 function loadContacts() {
-    const user = auth.currentUser;
+    const user = firebase.auth().currentUser;
     if (user) {
-        const contactsRef = db.collection('users');
+        const contactsRef = firebase.firestore().collection('users');
         contactsRef.get().then(snapshot => {
             const sidebar = document.querySelector('.sidebar');
             sidebar.innerHTML = ''; // Clear the existing contacts
@@ -23,9 +25,7 @@ function loadContacts() {
                     const contactElement = document.createElement('div');
                     contactElement.classList.add('contact');
                     contactElement.onclick = () => selectContact(contact.email);
-                    contactElement.innerHTML = `
-                        <div>${contact.email}</div>
-                    `;
+                    contactElement.innerHTML = `<div>${contact.email}</div>`;
                     sidebar.appendChild(contactElement);
                 }
             });
@@ -48,7 +48,7 @@ function sendMessage() {
         return;
     }
 
-    const user = auth.currentUser;
+    const user = firebase.auth().currentUser;
     if (user) {
         const chatContent = document.getElementById('chatContent');
         const chatInput = document.getElementById('chatInput');
@@ -65,7 +65,7 @@ function sendMessage() {
             chatInput.value = '';
             chatContent.scrollTop = chatContent.scrollHeight;
 
-            db.collection('messages').add({
+            firebase.firestore().collection('messages').add({
                 from: user.email,
                 to: currentContact,
                 message: messageText,
@@ -76,9 +76,10 @@ function sendMessage() {
 }
 
 function loadMessages(contactEmail) {
-    const user = auth.currentUser;
+    const user = firebase.auth().currentUser;
     if (user) {
-        db.collection('messages')
+        firebase.firestore().collection('messages')
+            .where('from', 'in', [user.email, contactEmail])
             .where('to', 'in', [user.email, contactEmail])
             .orderBy('timestamp')
             .onSnapshot((snapshot) => {
