@@ -167,7 +167,6 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
         }
         button {
             background-color: #40c4ff;
-            color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
