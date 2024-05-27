@@ -78,13 +78,15 @@ function sendMessage() {
 function loadMessages(contactEmail) {
     const user = firebase.auth().currentUser;
     if (user) {
+        const chatContent = document.getElementById('chatContent');
+        chatContent.innerHTML = '';
+
+        // First query: messages from the user to the contact
         firebase.firestore().collection('messages')
-            .where('from', 'in', [user.email, contactEmail])
-            .where('to', 'in', [user.email, contactEmail])
+            .where('from', '==', user.email)
+            .where('to', '==', contactEmail)
             .orderBy('timestamp')
             .onSnapshot((snapshot) => {
-                const chatContent = document.getElementById('chatContent');
-                chatContent.innerHTML = '';
                 snapshot.forEach((doc) => {
                     const data = doc.data();
                     const messageElement = document.createElement('div');
@@ -92,11 +94,28 @@ function loadMessages(contactEmail) {
                     bubbleElement.classList.add('bubble');
                     bubbleElement.textContent = data.message;
 
-                    if (data.from === user.email) {
-                        messageElement.classList.add('message', 'sent');
-                    } else {
-                        messageElement.classList.add('message', 'received');
-                    }
+                    messageElement.classList.add('message', 'sent');
+
+                    messageElement.appendChild(bubbleElement);
+                    chatContent.appendChild(messageElement);
+                });
+                chatContent.scrollTop = chatContent.scrollHeight;
+            });
+
+        // Second query: messages from the contact to the user
+        firebase.firestore().collection('messages')
+            .where('from', '==', contactEmail)
+            .where('to', '==', user.email)
+            .orderBy('timestamp')
+            .onSnapshot((snapshot) => {
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const messageElement = document.createElement('div');
+                    const bubbleElement = document.createElement('div');
+                    bubbleElement.classList.add('bubble');
+                    bubbleElement.textContent = data.message;
+
+                    messageElement.classList.add('message', 'received');
 
                     messageElement.appendChild(bubbleElement);
                     chatContent.appendChild(messageElement);
@@ -105,6 +124,7 @@ function loadMessages(contactEmail) {
             });
     }
 }
+
 
 document.getElementById('chatInput').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
