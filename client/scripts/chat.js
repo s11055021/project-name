@@ -1,4 +1,5 @@
 let currentContact = '';
+let unsubscribeFromMessages = null; // Store the unsubscribe function
 
 function toggleChat() {
     const chatContainer = document.getElementById('chatContainer');
@@ -36,6 +37,10 @@ function loadContacts() {
 }
 
 function selectContact(contactEmail) {
+    if (unsubscribeFromMessages) {
+        unsubscribeFromMessages(); // Unsubscribe from previous snapshot listener
+    }
+
     currentContact = contactEmail;
     document.getElementById('chatHeader').textContent = 'Chat with ' + contactEmail;
     document.getElementById('chatContent').innerHTML = ''; // Clear the existing messages
@@ -82,12 +87,45 @@ function loadMessages(contactEmail) {
         chatContent.innerHTML = '';
 
         // First query: messages from the user to the contact
-        firebase.firestore().collection('messages')
+        const query1 = firebase.firestore().collection('messages')
             .where('from', '==', user.email)
             .where('to', '==', contactEmail)
-            .orderBy('timestamp')
+            .orderBy('timestamp');
+
+        // Second query: messages from the contact to the user
+        const query2 = firebase.firestore().collection('messages')
+            .where('from', '==', contactEmail)
+            .where('to', '==', user.email)
+            .orderBy('timestamp');
+
+        // Combine the queries and listen to changes
+        unsubscribeFromMessages = firebase.firestore().collectionGroup('messages')
             .onSnapshot((snapshot) => {
+                chatContent.innerHTML = '';
                 snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const messageElement = document.createElement('div');
+                    const bubbleElement = document.createElement('div');
+                    bubbleElement.classList.add('bubble');
+                    bubbleElement.textContent = data.message;
+
+                    if (data.from === user.email) {
+                        messageElement.classList.add('message', 'sent');
+                    } else {
+                        messageElement.classList.add('message', 'received');
+                    }
+
+                    messageElement.appendChild(bubbleElement);
+                    chatContent.appendChild(messageElement);
+                });
+                chatContent.scrollTop = chatContent.scrollHeight;
+            });
+
+        // Use Promise.all to ensure both queries are executed
+        Promise.all([query1.get(), query2.get()])
+            .then(([snapshot1, snapshot2]) => {
+                chatContent.innerHTML = '';
+                snapshot1.forEach((doc) => {
                     const data = doc.data();
                     const messageElement = document.createElement('div');
                     const bubbleElement = document.createElement('div');
@@ -95,20 +133,11 @@ function loadMessages(contactEmail) {
                     bubbleElement.textContent = data.message;
 
                     messageElement.classList.add('message', 'sent');
-
                     messageElement.appendChild(bubbleElement);
                     chatContent.appendChild(messageElement);
                 });
-                chatContent.scrollTop = chatContent.scrollHeight;
-            });
 
-        // Second query: messages from the contact to the user
-        firebase.firestore().collection('messages')
-            .where('from', '==', contactEmail)
-            .where('to', '==', user.email)
-            .orderBy('timestamp')
-            .onSnapshot((snapshot) => {
-                snapshot.forEach((doc) => {
+                snapshot2.forEach((doc) => {
                     const data = doc.data();
                     const messageElement = document.createElement('div');
                     const bubbleElement = document.createElement('div');
@@ -116,15 +145,17 @@ function loadMessages(contactEmail) {
                     bubbleElement.textContent = data.message;
 
                     messageElement.classList.add('message', 'received');
-
                     messageElement.appendChild(bubbleElement);
                     chatContent.appendChild(messageElement);
                 });
+
                 chatContent.scrollTop = chatContent.scrollHeight;
+            })
+            .catch(error => {
+                console.error("Error loading messages: ", error);
             });
     }
 }
-
 
 document.getElementById('chatInput').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
