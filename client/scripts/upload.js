@@ -165,7 +165,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
             resize: none;
             height: 100px; /* 固定 textarea 大小 */
         }
-        button {
+        .feedbackbutton {
             background-color: #FFA500;
             padding: 10px 20px;
             border: none;
@@ -256,7 +256,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
                         <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
                     </div>
                     <textarea id="feedback" placeholder="Write your feedback here..." required></textarea>
-                    <button type="submit">傳送</button>
+                    <button id="feedbackbutton" type="submit">傳送</button>
                 </form>
                 <div id="feedback-list"></div>
             </div>
