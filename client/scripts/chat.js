@@ -66,9 +66,15 @@ function sendMessage() {
             bubbleElement.classList.add('bubble');
             bubbleElement.textContent = messageText;
             messageElement.appendChild(bubbleElement);
+
+            // Hide the element before appending
+            messageElement.style.display = 'none';
             chatContent.appendChild(messageElement);
             chatInput.value = '';
             chatContent.scrollTop = chatContent.scrollHeight;
+
+            // Show the element after appending
+            messageElement.style.display = '';
 
             firebase.firestore().collection('messages').add({
                 from: user.email,
@@ -124,8 +130,17 @@ function loadMessages(contactEmail) {
                     }
 
                     messageElement.appendChild(bubbleElement);
+
+                    // Hide the element before appending
+                    messageElement.style.display = 'none';
                     chatContent.appendChild(messageElement);
                 });
+
+                // Show the elements after appending
+                chatContent.querySelectorAll('.message').forEach(element => {
+                    element.style.display = '';
+                });
+
                 chatContent.scrollTop = chatContent.scrollHeight;
             });
 
@@ -159,7 +174,15 @@ function loadMessages(contactEmail) {
                     }
 
                     messageElement.appendChild(bubbleElement);
+
+                    // Hide the element before appending
+                    messageElement.style.display = 'none';
                     chatContent.appendChild(messageElement);
+                });
+
+                // Show the elements after appending
+                chatContent.querySelectorAll('.message').forEach(element => {
+                    element.style.display = '';
                 });
 
                 chatContent.scrollTop = chatContent.scrollHeight;
