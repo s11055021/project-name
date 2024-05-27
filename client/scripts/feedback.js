@@ -19,7 +19,7 @@ document.getElementById('rating-form').addEventListener('submit', function (e) {
         feedback: feedback,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
-        alert('回饋成功!');
+        alert('Feedback submitted successfully!');
         loadFeedback();
         document.getElementById('rating-form').reset();
     }).catch((error) => {
@@ -33,7 +33,8 @@ function loadFeedback() {
     db.collection('feedback').where('page', '==', pageIdentifier).orderBy('timestamp', 'desc').get().then((querySnapshot) => {
         const feedbackList = document.getElementById('feedback-list');
         feedbackList.innerHTML = '';
-        const feedbackData = doc.data();
+        querySnapshot.forEach((doc) => {
+            const feedbackData = doc.data();
             const timestamp = new Date(feedbackData.timestamp.seconds * 1000);
             const formattedTime = `${timestamp.toLocaleDateString()} ${timestamp.toLocaleTimeString()}`;
             feedbackList.innerHTML += `<p><strong>${feedbackData.user}</strong><strong>${feedbackData.rating} stars</strong>: ${feedbackData.feedback} - ${formattedTime}</p>`;
