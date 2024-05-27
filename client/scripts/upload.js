@@ -165,7 +165,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
             resize: none;
             height: 100px; /* 固定 textarea 大小 */
         }
-        .feedbackbutton {
+        #feedbackbutton {
             background-color: #FFA500;
             padding: 10px 20px;
             border: none;
@@ -173,7 +173,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
             cursor: pointer;
             transition: background-color 0.2s;
         }
-        button:hover {
+        #feedbackbutton:hover {
             background-color: #cc8c1d;
         }
         #feedback-list {
