@@ -101,9 +101,17 @@ function loadMessages(contactEmail) {
         // Combine the queries and listen to changes
         unsubscribeFromMessages = firebase.firestore().collectionGroup('messages')
             .onSnapshot((snapshot) => {
-                chatContent.innerHTML = '';
+                const messages = [];
                 snapshot.forEach((doc) => {
                     const data = doc.data();
+                    messages.push(data);
+                });
+
+                // Sort messages by timestamp
+                messages.sort((a, b) => a.timestamp - b.timestamp);
+
+                chatContent.innerHTML = ''; // Clear the existing messages
+                messages.forEach((data) => {
                     const messageElement = document.createElement('div');
                     const bubbleElement = document.createElement('div');
                     bubbleElement.classList.add('bubble');
@@ -124,27 +132,32 @@ function loadMessages(contactEmail) {
         // Use Promise.all to ensure both queries are executed
         Promise.all([query1.get(), query2.get()])
             .then(([snapshot1, snapshot2]) => {
-                chatContent.innerHTML = '';
-                snapshot1.forEach((doc) => {
-                    const data = doc.data();
-                    const messageElement = document.createElement('div');
-                    const bubbleElement = document.createElement('div');
-                    bubbleElement.classList.add('bubble');
-                    bubbleElement.textContent = data.message;
+                const messages = [];
 
-                    messageElement.classList.add('message', 'sent');
-                    messageElement.appendChild(bubbleElement);
-                    chatContent.appendChild(messageElement);
+                snapshot1.forEach((doc) => {
+                    messages.push(doc.data());
                 });
 
                 snapshot2.forEach((doc) => {
-                    const data = doc.data();
+                    messages.push(doc.data());
+                });
+
+                // Sort messages by timestamp
+                messages.sort((a, b) => a.timestamp - b.timestamp);
+
+                chatContent.innerHTML = ''; // Clear the existing messages
+                messages.forEach((data) => {
                     const messageElement = document.createElement('div');
                     const bubbleElement = document.createElement('div');
                     bubbleElement.classList.add('bubble');
                     bubbleElement.textContent = data.message;
 
-                    messageElement.classList.add('message', 'received');
+                    if (data.from === user.email) {
+                        messageElement.classList.add('message', 'sent');
+                    } else {
+                        messageElement.classList.add('message', 'received');
+                    }
+
                     messageElement.appendChild(bubbleElement);
                     chatContent.appendChild(messageElement);
                 });
