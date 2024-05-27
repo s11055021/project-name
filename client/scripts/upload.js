@@ -194,6 +194,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
             }
         }
     </style>
+    <link rel="icon" href="bookicon.jpg">
     <link rel="stylesheet" href="css/chat.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/mobile.css">
