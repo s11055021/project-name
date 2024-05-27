@@ -216,6 +216,8 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
         </ul>
     </nav>
 
+    <!-- Add a hidden input to store the page identifier -->
+    <input type="hidden" id="page-identifier" value="${imageUrl}">
     <section>
         <div class="image-section" style="flex: 1; padding: 20px;">
             <img src="${imageUrl}" alt="Image Description" style="max-width: 100%; height: auto;">
