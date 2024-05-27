@@ -8,11 +8,13 @@ document.getElementById('rating-form').addEventListener('submit', function (e) {
         return;
     }
 
+    const pageIdentifier = document.getElementById('page-identifier').value;
     const rating = document.querySelector('input[name="rating"]:checked').value;
     const feedback = document.getElementById('feedback').value;
 
     db.collection('feedback').add({
         user: user.email,
+        page: pageIdentifier,
         rating: rating,
         feedback: feedback,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -26,20 +28,20 @@ document.getElementById('rating-form').addEventListener('submit', function (e) {
 });
 
 function loadFeedback() {
-    db.collection('feedback').orderBy('timestamp', 'desc').get().then((querySnapshot) => {
+    const pageIdentifier = document.getElementById('page-identifier').value;
+
+    db.collection('feedback').where('page', '==', pageIdentifier).orderBy('timestamp', 'desc').get().then((querySnapshot) => {
         const feedbackList = document.getElementById('feedback-list');
         feedbackList.innerHTML = '';
-        querySnapshot.forEach((doc) => {
-            const feedbackData = doc.data();
+        const feedbackData = doc.data();
             const timestamp = new Date(feedbackData.timestamp.seconds * 1000);
             const formattedTime = `${timestamp.toLocaleDateString()} ${timestamp.toLocaleTimeString()}`;
-            feedbackList.innerHTML += `<p><strong>${feedbackData.user}</strong><strong> (${feedbackData.rating}顆星)</strong>: ${feedbackData.feedback} - ${formattedTime}</p>`;
+            feedbackList.innerHTML += `<p><strong>${feedbackData.user}</strong><strong>${feedbackData.rating} stars</strong>: ${feedbackData.feedback} - ${formattedTime}</p>`;
         });
     }).catch((error) => {
         console.error('Error loading feedback: ', error);
     });
 }
-
 
 // Load feedback on page load
 window.onload = function () {
