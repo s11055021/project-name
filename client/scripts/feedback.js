@@ -19,7 +19,7 @@ document.getElementById('rating-form').addEventListener('submit', function (e) {
         feedback: feedback,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
-        alert('Feedback submitted successfully!');
+        alert('回饋成功!');
         loadFeedback();
         document.getElementById('rating-form').reset();
     }).catch((error) => {
