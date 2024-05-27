@@ -86,17 +86,39 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>台語學習系統</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
         section {
             display: flex;
-            flex-wrap: wrap; 
+            flex-wrap: wrap;
             justify-content: space-around;
-            align-items: flex-start; 
+            align-items: flex-start;
             padding: 20px;
+        }
+        .image-section, .description-section {
+            box-sizing: border-box;
+            padding: 20px;
+        }
+        .image-section {
+            flex: 1;
+            max-width: 50%;
+        }
+        .image-section img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+        .description-section {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
         }
         .availability-grid {
             display: grid;
             grid-template-columns: repeat(8, 1fr); /* 1 for time slots and 7 for days */
             gap: 5px;
+            margin-bottom: 20px;
         }
         .time-slot, .day {
             background-color: #f0f0f0;
@@ -110,6 +132,67 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
         }
         .cell.available {
             background-color: #40c4ff;
+        }
+        .rating-section {
+            margin-top: 20px;
+        }
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+        .star-rating label {
+            font-size: 30px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .star-rating input[type="radio"]:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #f5c518;
+        }
+        textarea {
+            width: 95%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            resize: none;
+            height: 100px; /* 固定 textarea 大小 */
+        }
+        button {
+            background-color: #40c4ff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #00b0ff;
+        }
+        #feedback-list {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        #feedback-list p {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        @media (max-width: 768px) {
+            .image-section, .description-section {
+                max-width: 100%;
+                flex: 1 1 100%;
+                padding: 10px;
+            }
         }
     </style>
     <link rel="stylesheet" href="css/chat.css">
@@ -127,7 +210,6 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
                 <ul>
                     <li class="logout"><a href="#" id="loginButton">登入</a></li>
                     <li class="logout"><a href="#" id="signupButton">註冊</a></li>
-                    <li class="login"><a href="學習紀錄.html" id="learningrecord">學習紀錄</a></li>
                     <li class="login"><a href="#" id="logoutButton">登出</a></li>                  
                 </ul>
             </li>
@@ -162,6 +244,21 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
                 <div class="time-slot">晚上<br>19:00-22:00</div>
                 ${generateCells('晚上')}
                 
+            </div>
+            <div class="rating-section">
+                <h3>Leave Your Feedback</h3>
+                <form id="rating-form">
+                    <div class="star-rating">
+                        <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                        <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                        <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                        <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                        <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+                    </div>
+                    <textarea id="feedback" placeholder="Write your feedback here..." required></textarea>
+                    <button type="submit">Submit</button>
+                </form>
+                <div id="feedback-list"></div>
             </div>
         </div>
     </section>
@@ -233,6 +330,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
     <script src="scripts/chat.js"></script>
 
     <script src="scripts/upload.js"></script> 
+    <script src="scripts/feedback.js"></script>
 
     <footer>
         &copy; 2024 台語學習. All rights reserved.
