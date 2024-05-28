@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: tau-phah-ji-command-client
+    name: project-name-client
     env: node
     buildCommand: "npm install"
     startCommand: "npm start"
@@ -8,7 +8,7 @@ services:
     rootDir: server # 指向包含 package.json 的資料夾
 
   - type: web
-    name: tau-phah-ji-command-server
+    name: project-name-server
     env: python
     buildCommand: "pip install -r server/requirements.txt"
     startCommand: "python server/app.py"
