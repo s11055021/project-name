@@ -56,6 +56,17 @@ app.post('/api/create-html', async (req, res) => {
     }
 });
 
+// 新增這段代碼
+app.post('/convert', async (req, res) => {
+    try {
+        const response = await axios.post('http://localhost:5000/convert', req.body); // 假設Flask伺服器在5000端口運行
+        res.status(response.status).send(response.data);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error converting text');
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
