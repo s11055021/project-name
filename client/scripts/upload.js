@@ -205,6 +205,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
         <ul>
             <li><a href="teacher.html" target="_self">我要當老師</a></li>
             <li><a href="說說看.html" target="_self">視訊教學</a></li>
+            <li><a href="translate.html" target="_self">台語字典</a></li>
             <li id="user"><a>用戶相關</a>
                 <ul>
                     <li class="logout"><a href="#" id="loginButton">登入</a></li>
