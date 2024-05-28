@@ -1,38 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tau-Phah-Ji-Command Integration</title>
-</head>
-<body>
-    <h1>Tau-Phah-Ji-Command Integration</h1>
-    <textarea id="inputText" placeholder="輸入文字"></textarea>
-    <button onclick="convertText()">轉換</button>
-    <p><span id="result"></span></p>
-
-    <script>
-        async function convertText() {
-            const inputText = document.getElementById('inputText').value;
-            try {
-                const response = await fetch('/convert', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ text: inputText })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    // 只顯示返回數據中的分詞部分
-                    document.getElementById('result').innerHTML = data.漢字 + "的羅馬拼音是 " + data.KIP + "<br>" + data.分詞;
-                } else {
-                    throw new Error(data.error);
-                }
-            } catch (error) {
-                document.getElementById('result').textContent = `Error: ${error.message}`;
+<script>
+    async function convertText() {
+        const inputText = document.getElementById('inputText').value;
+        try {
+            const response = await fetch('https://project-name-server.onrender.com/convert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: inputText })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                document.getElementById('result').innerHTML = data.漢字 + "的羅馬拼音是 " + data.KIP + "<br>" + data.分詞;
+            } else {
+                throw new Error(data.error);
             }
+        } catch (error) {
+            document.getElementById('result').textContent = `Error: ${error.message}`;
         }
-    </script>
-</body>
-</html>
+    }
+</script>
