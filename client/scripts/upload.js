@@ -345,7 +345,7 @@ function generateTeacherPageContent(name, bio, availableDates, imageUrl, email) 
 async function uploadToGitHub(filename, content) {
     showLoading(true);
     try {
-        const response = await fetch('https://project-name-kixz.onrender.com/api/create-html', {
+        const response = await fetch('https://project-name-yrq9.onrender.com', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
