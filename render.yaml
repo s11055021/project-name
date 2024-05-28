@@ -1,10 +1,14 @@
 services:
   - type: web
-    name: tau-phah-ji-command
+    name: tau-phah-ji-command-client
+    env: node
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    plan: free
+
+  - type: web
+    name: tau-phah-ji-command-server
     env: python
     buildCommand: "pip install -r server/requirements.txt"
     startCommand: "python server/app.py"
     plan: free
-    envVars:
-      - key: FLASK_ENV
-        value: production
