@@ -5,6 +5,7 @@ services:
     buildCommand: "npm install"
     startCommand: "npm start"
     plan: free
+    rootDir: server # 指向包含 package.json 的資料夾
 
   - type: web
     name: tau-phah-ji-command-server
