@@ -49,7 +49,7 @@ function selectContact(contactEmail) {
 
 function sendMessage() {
     if (!currentContact) {
-        alert('Please select a contact to chat with.');
+        alert('請選擇一個聯絡人進行聊天。');
         return;
     }
 
@@ -67,14 +67,16 @@ function sendMessage() {
             bubbleElement.textContent = messageText;
             messageElement.appendChild(bubbleElement);
 
-            // Hide the element before appending
+            // 隱藏元素後附加
             messageElement.style.display = 'none';
             chatContent.appendChild(messageElement);
             chatInput.value = '';
-            chatContent.scrollTop = chatContent.scrollHeight;
 
-            // Show the element after appending
+            // 顯示元素後附加
             messageElement.style.display = '';
+
+            // 滾動到底部
+            chatContent.scrollTop = chatContent.scrollHeight;
 
             firebase.firestore().collection('messages').add({
                 from: user.email,
@@ -92,59 +94,19 @@ function loadMessages(contactEmail) {
         const chatContent = document.getElementById('chatContent');
         chatContent.innerHTML = '';
 
-        // First query: messages from the user to the contact
+        // 查詢從用戶到聯絡人的消息
         const query1 = firebase.firestore().collection('messages')
             .where('from', '==', user.email)
             .where('to', '==', contactEmail)
             .orderBy('timestamp');
 
-        // Second query: messages from the contact to the user
+        // 查詢從聯絡人到用戶的消息
         const query2 = firebase.firestore().collection('messages')
             .where('from', '==', contactEmail)
             .where('to', '==', user.email)
             .orderBy('timestamp');
 
-        // Combine the queries and listen to changes
-        unsubscribeFromMessages = firebase.firestore().collectionGroup('messages')
-            .onSnapshot((snapshot) => {
-                const messages = [];
-                snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    messages.push(data);
-                });
-
-                // Sort messages by timestamp
-                messages.sort((a, b) => a.timestamp - b.timestamp);
-
-                chatContent.innerHTML = ''; // Clear the existing messages
-                messages.forEach((data) => {
-                    const messageElement = document.createElement('div');
-                    const bubbleElement = document.createElement('div');
-                    bubbleElement.classList.add('bubble');
-                    bubbleElement.textContent = data.message;
-
-                    if (data.from === user.email) {
-                        messageElement.classList.add('message', 'sent');
-                    } else {
-                        messageElement.classList.add('message', 'received');
-                    }
-
-                    messageElement.appendChild(bubbleElement);
-
-                    // Hide the element before appending
-                    messageElement.style.display = 'none';
-                    chatContent.appendChild(messageElement);
-                });
-
-                // Show the elements after appending
-                chatContent.querySelectorAll('.message').forEach(element => {
-                    element.style.display = '';
-                });
-
-                chatContent.scrollTop = chatContent.scrollHeight;
-            });
-
-        // Use Promise.all to ensure both queries are executed
+        // 使用 Promise.all 確保兩個查詢都執行
         Promise.all([query1.get(), query2.get()])
             .then(([snapshot1, snapshot2]) => {
                 const messages = [];
@@ -157,10 +119,10 @@ function loadMessages(contactEmail) {
                     messages.push(doc.data());
                 });
 
-                // Sort messages by timestamp
+                // 根據時間戳排序消息
                 messages.sort((a, b) => a.timestamp - b.timestamp);
 
-                chatContent.innerHTML = ''; // Clear the existing messages
+                chatContent.innerHTML = ''; // 清空現有消息
                 messages.forEach((data) => {
                     const messageElement = document.createElement('div');
                     const bubbleElement = document.createElement('div');
@@ -175,16 +137,17 @@ function loadMessages(contactEmail) {
 
                     messageElement.appendChild(bubbleElement);
 
-                    // Hide the element before appending
+                    // 隱藏元素後附加
                     messageElement.style.display = 'none';
                     chatContent.appendChild(messageElement);
                 });
 
-                // Show the elements after appending
+                // 顯示元素後附加
                 chatContent.querySelectorAll('.message').forEach(element => {
                     element.style.display = '';
                 });
 
+                // 滾動到底部
                 chatContent.scrollTop = chatContent.scrollHeight;
             })
             .catch(error => {
@@ -192,6 +155,7 @@ function loadMessages(contactEmail) {
             });
     }
 }
+
 
 document.getElementById('chatInput').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
