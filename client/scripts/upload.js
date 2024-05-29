@@ -361,7 +361,7 @@ async function uploadToGitHub(filename, content) {
         }
     } catch (error) {
         console.error("Error uploading to GitHub:", error);
-        alert('上傳失敗');
+        alert('上傳失敗，請再試一次');
     } finally {
         showLoading(false);
     }
